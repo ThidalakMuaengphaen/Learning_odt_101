@@ -1,0 +1,30 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Rooms" %>
+
+<h1>Rooms</h1>
+
+<div id='chatapp'>
+  <div id="rooms">
+    <div id='room-list'>
+      <% @rooms.each do |room| %>
+        <%= render room %>
+      <% end %>
+    </div>
+    <%= render partial: 'form', locals: {room: Room.new(name: "Room #{Room.count + 1}")} %>
+  </div>
+
+  <div id='messages'>
+    <%= turbo_frame_tag 'room-messages' do %>
+      <div id='message-list'>
+        <% @messages.each do |message| %>
+          <%= render message %>
+        <% end %>
+      </div>
+      <%= render partial: 'messages/form', locals: {message: Message.new(room: @room)} %>
+      
+      <%= turbo_stream_from @room %>
+    <% end %>
+  </div>
+
+</div>
